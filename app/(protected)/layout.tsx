@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getServerSideUser } from '@/lib/auth-server';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { DashboardShell } from '@/components/dashboard/DashboardShell';
 
 export default async function ProtectedLayout({
   children,
@@ -18,9 +19,9 @@ export default async function ProtectedLayout({
   // User is authenticated, render with user data
   return (
     <AuthProvider initialUser={user}>
-      <div className="protected-layout">
+      <DashboardShell>
         {children}
-      </div>
+      </DashboardShell>
     </AuthProvider>
   );
 }

@@ -1,208 +1,161 @@
-'use client';
+"use client"
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from "react"
+import { Menu, Bell, Search, Sun, Moon, User, Settings, LogOut } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
-  Bars3Icon,
-  BellIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  ArrowLeftOnRectangleIcon,
-  MoonIcon,
-  SunIcon
-} from '@heroicons/react/24/outline';
-import { useAuth } from '@/contexts/AuthContext';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/contexts/AuthContext"
 
 interface TopBarProps {
-  onMenuClick: () => void;
+  onMenuClick: () => void
 }
 
 export function TopBar({ onMenuClick }: TopBarProps) {
-  const { user, logout } = useAuth();
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const notificationRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useAuth()
+  const [isDarkMode, setIsDarkMode] = useState(true)
 
   const notifications = [
-    { id: 1, title: 'New user registered', time: '2 min ago', unread: true },
-    { id: 2, title: 'System update completed', time: '1 hour ago', unread: true },
-    { id: 3, title: 'Weekly report ready', time: '3 hours ago', unread: false },
-  ];
+    { id: 1, title: "New user registered", time: "2 min ago", unread: true },
+    { id: 2, title: "System update completed", time: "1 hour ago", unread: true },
+    { id: 3, title: "Weekly report ready", time: "3 hours ago", unread: false },
+  ]
 
-  const unreadCount = notifications.filter(n => n.unread).length;
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setProfileDropdownOpen(false);
-      }
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setNotificationsOpen(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const unreadCount = notifications.filter((n) => n.unread).length
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logout()
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error)
     }
-  };
+  }
 
   return (
-    <div className="sticky top-0 z-40 flex h-20 flex-shrink-0 items-center gap-x-4 border-b border-gray-800 bg-black px-6 shadow-lg lg:px-8">
-      {/* Mobile menu button */}
-      <button
-        type="button"
-        className="-m-2.5 p-2.5 text-gray-400 lg:hidden hover:text-white hover:bg-gray-800 rounded-lg transition-all duration-200"
+    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      <Button
+        variant="outline"
+        size="icon"
+        className="shrink-0 md:hidden"
         onClick={onMenuClick}
       >
-        <span className="sr-only">Open sidebar</span>
-        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-      </button>
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle navigation menu</span>
+      </Button>
 
-      {/* Separator */}
-      <div className="h-8 w-px bg-gray-800 lg:hidden" aria-hidden="true" />
-
-      <div className="flex flex-1 justify-end gap-x-6">
-        {/* Right side content only */}
-
-        <div className="flex items-center gap-x-6">
-          {/* Theme toggle */}
-          <button
-            type="button"
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition-all duration-200"
-          >
-            <span className="sr-only">Toggle theme</span>
-            {isDarkMode ? (
-              <SunIcon className="h-5 w-5" aria-hidden="true" />
-            ) : (
-              <MoonIcon className="h-5 w-5" aria-hidden="true" />
-            )}
-          </button>
-
-          {/* Notifications */}
-          <div className="relative" ref={notificationRef}>
-            <button
-              type="button"
-              onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="p-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition-all duration-200 relative"
-            >
-              <span className="sr-only">View notifications</span>
-              <BellIcon className="h-5 w-5" aria-hidden="true" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 h-4 w-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center shadow-lg">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {/* Notifications dropdown */}
-            {notificationsOpen && (
-              <div className="absolute right-0 z-10 mt-3 w-80 origin-top-right rounded-xl bg-gray-950 border border-gray-800 shadow-2xl focus:outline-none">
-                <div className="p-4">
-                  <h3 className="text-sm font-medium text-white mb-3">Notifications</h3>
-                  <div className="space-y-3">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                          notification.unread
-                            ? 'bg-blue-900/20 border border-blue-500/30'
-                            : 'bg-gray-700 hover:bg-gray-600'
-                        }`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <p className={`text-sm ${notification.unread ? 'text-white font-medium' : 'text-gray-300'}`}>
-                            {notification.title}
-                          </p>
-                          {notification.unread && (
-                            <div className="h-2 w-2 bg-blue-500 rounded-full ml-2 mt-1"></div>
-                          )}
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-gray-700">
-                    <button className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
-                      View all notifications
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+      <div className="w-full flex-1">
+        <form>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+            />
           </div>
-
-          {/* Separator */}
-          <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-700" aria-hidden="true" />
-
-          {/* Profile dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              type="button"
-              className="flex items-center p-2 hover:bg-gray-800 rounded-xl transition-all duration-200"
-              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-            >
-              <span className="sr-only">Open user menu</span>
-              <div className="h-10 w-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white font-medium text-sm">
-                  {user?.name?.charAt(0).toUpperCase() || 'U'}
-                </span>
-              </div>
-              <span className="hidden lg:flex lg:items-center">
-                <span className="ml-4 text-sm font-semibold leading-6 text-white" aria-hidden="true">
-                  {user?.name || 'User'}
-                </span>
-              </span>
-            </button>
-
-            {/* Profile dropdown menu */}
-            {profileDropdownOpen && (
-              <div className="absolute right-0 z-10 mt-3 w-56 origin-top-right rounded-xl bg-gray-950 border border-gray-800 shadow-2xl focus:outline-none">
-                <div className="p-2">
-                  <div className="px-3 py-2 border-b border-gray-700 mb-2">
-                    <p className="text-sm font-medium text-white">{user?.name || 'User'}</p>
-                    <p className="text-xs text-gray-400">{user?.email || 'user@example.com'}</p>
-                  </div>
-
-                  <a
-                    href="/dashboard/profile"
-                    className="flex items-center px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors"
-                  >
-                    <UserCircleIcon className="mr-3 h-5 w-5" aria-hidden="true" />
-                    Your Profile
-                  </a>
-
-                  <a
-                    href="/dashboard/settings"
-                    className="flex items-center px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors"
-                  >
-                    <Cog6ToothIcon className="mr-3 h-5 w-5" aria-hidden="true" />
-                    Settings
-                  </a>
-
-                  <div className="border-t border-gray-700 mt-2 pt-2">
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors"
-                    >
-                      <ArrowLeftOnRectangleIcon className="mr-3 h-5 w-5" aria-hidden="true" />
-                      Sign out
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        </form>
       </div>
-    </div>
-  );
+
+      <div className="flex items-center gap-4">
+        {/* Theme toggle */}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setIsDarkMode(!isDarkMode)}
+        >
+          {isDarkMode ? (
+            <Sun className="h-[1.2rem] w-[1.2rem]" />
+          ) : (
+            <Moon className="h-[1.2rem] w-[1.2rem]" />
+          )}
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+
+        {/* Notifications */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon" className="relative">
+              <Bell className="h-4 w-4" />
+              {unreadCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                >
+                  {unreadCount}
+                </Badge>
+              )}
+              <span className="sr-only">View notifications</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {notifications.map((notification) => (
+              <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
+                <div className="flex w-full items-start justify-between">
+                  <p className={`text-sm ${notification.unread ? "font-medium" : ""}`}>
+                    {notification.title}
+                  </p>
+                  {notification.unread && (
+                    <div className="h-2 w-2 rounded-full bg-blue-500" />
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">{notification.time}</p>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-center">
+              View all notifications
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* User menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="rounded-full">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="" alt={user?.name || "User"} />
+                <AvatarFallback className="bg-gradient-to-br from-green-400 to-blue-500 text-white">
+                  {user?.name?.charAt(0).toUpperCase() || "U"}
+                </AvatarFallback>
+              </Avatar>
+              <span className="sr-only">Toggle user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel className="flex flex-col">
+              <span>{user?.name || "User"}</span>
+              <span className="text-xs font-normal text-muted-foreground">
+                {user?.email || "user@example.com"}
+              </span>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  )
 }
