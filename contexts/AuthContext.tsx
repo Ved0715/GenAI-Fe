@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
 import { User, AuthState } from '@/lib/types';
 import { apiClient } from '@/lib/api';
 
@@ -136,7 +136,7 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
     }
   };
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     ...state,
     login,
     register,
@@ -144,7 +144,7 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
     logoutAll,
     refreshUser,
     clearError,
-  };
+  }), [state, login, register, logout, logoutAll, refreshUser, clearError]);
 
   return (
     <AuthContext.Provider value={value}>

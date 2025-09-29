@@ -14,6 +14,7 @@ class ApiClient {
     this.client = axios.create({
       baseURL: API_BASE_URL,
       withCredentials: true,
+      timeout: 10000, // 10 second timeout
       headers: {
         'Content-Type': 'application/json',
       },
@@ -97,12 +98,10 @@ class ApiClient {
 
   // Authentication methods
   async login(email: string, password: string) {
-    console.log('ApiClient: Sending login request', { email });
     const response = await this.client.post('/api/auth?action=login', {
       email,
       password,
     });
-    console.log('ApiClient: Login response', response.status, response.data);
     return response.data;
   }
 

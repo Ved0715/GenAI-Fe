@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function LoginForm() {
-  const router = useRouter();
   const { login, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -44,7 +42,8 @@ export function LoginForm() {
 
     try {
       await login(formData.email, formData.password);
-      router.push('/dashboard');
+      // Force a full page reload to ensure proper SSR hydration
+      window.location.href = '/dashboard';
     } catch (error) {
       // Error is handled by the AuthContext
     }
@@ -127,9 +126,16 @@ export function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg disabled:hover:scale-100 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg disabled:hover:scale-100 disabled:cursor-not-allowed relative"
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Signing In...
+              </div>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
 
