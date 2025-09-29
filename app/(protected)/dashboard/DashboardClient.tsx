@@ -1,7 +1,6 @@
 'use client';
 
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
 import { User } from '@/lib/types';
 
 interface DashboardClientProps {
@@ -38,20 +37,20 @@ function DashboardContent() {
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <div className="flex space-x-4">
-              <Button
-                variant="secondary"
+              <button
+                className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:cursor-not-allowed"
                 onClick={handleLogoutAll}
                 disabled={isLoading}
               >
                 Logout All Devices
-              </Button>
-              <Button
-                variant="danger"
+              </button>
+              <button
+                className="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:cursor-not-allowed"
                 onClick={handleLogout}
                 disabled={isLoading}
               >
                 Logout
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -94,20 +93,20 @@ function DashboardContent() {
                   Manage your active sessions across all devices.
                 </p>
                 <div className="mt-4 space-x-4">
-                  <Button
-                    variant="secondary"
+                  <button
+                    className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:cursor-not-allowed"
                     onClick={handleLogoutAll}
                     disabled={isLoading}
                   >
                     Logout from All Devices
-                  </Button>
-                  <Button
-                    variant="danger"
+                  </button>
+                  <button
+                    className="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:cursor-not-allowed"
                     onClick={handleLogout}
                     disabled={isLoading}
                   >
                     Logout from This Device
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

@@ -23,7 +23,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({
     user: initialUser || null,
-    isLoading: initialUser === undefined && typeof window !== 'undefined', // Only loading if initialUser is undefined
+    isLoading: false, // Start with false - only set to true during operations
     isAuthenticated: !!initialUser,
     error: null,
   });
@@ -50,50 +50,22 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
     }));
   };
 
-  // Only check authentication on mount if initialUser is undefined
+  // No complex auth checking needed - server handles this
   useEffect(() => {
-    if (typeof window === 'undefined') return; // Skip on server
-    if (initialUser !== undefined) {
-      // If initialUser is explicitly provided (even if null), don't auto-check
-      setLoading(false);
-      return;
+    // Only set loading to false if we don't have initialUser
+    if (initialUser === undefined) {
+      setState(prev => ({ ...prev, isLoading: false }));
     }
-
-    // Only auto-check if we're on a protected route that needs auth
-    const currentPath = window.location.pathname;
-    const needsAuth = currentPath.startsWith('/dashboard');
-
-    if (!needsAuth) {
-      setUser(null); // Set as not authenticated for public pages
-      return;
-    }
-
-    const checkAuth = async () => {
-      try {
-        setLoading(true);
-        const userData = await apiClient.getCurrentUser();
-        setUser(userData);
-      } catch (error) {
-        // User is not authenticated, this is normal
-        setUser(null);
-      }
-    };
-
-    checkAuth();
   }, [initialUser]);
 
   const login = async (email: string, password: string): Promise<void> => {
     try {
-      console.log('AuthContext: Starting login for', email);
       setLoading(true);
       clearError();
 
-      console.log('AuthContext: Calling apiClient.login');
       const response = await apiClient.login(email, password);
-      console.log('AuthContext: Login response received', response);
       setUser(response.user);
     } catch (error) {
-      console.error('AuthContext: Login error', error);
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response: { data: { detail: string } } };
         setError(axiosError.response?.data?.detail || 'Login failed');

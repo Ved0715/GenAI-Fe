@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
 
 export default function HomePage() {
   return (
@@ -15,17 +14,19 @@ export default function HomePage() {
             </p>
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
-                <Link href="/login">
-                  <Button size="lg" className="w-full sm:w-auto">
-                    Sign In
-                  </Button>
+                <Link
+                  href="/login"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors w-full sm:w-auto text-center"
+                >
+                  Sign In
                 </Link>
               </div>
               <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-                <Link href="/register">
-                  <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                    Create Account
-                  </Button>
+                <Link
+                  href="/register"
+                  className="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-8 rounded-lg transition-colors w-full sm:w-auto text-center"
+                >
+                  Create Account
                 </Link>
               </div>
             </div>

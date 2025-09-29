@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/Button';
 
 export default function Error({
   error,
@@ -25,16 +24,18 @@ export default function Error({
             We're sorry, but something unexpected happened. Please try again.
           </p>
           <div className="space-y-3">
-            <Button onClick={reset} className="w-full">
+            <button
+              onClick={reset}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            >
               Try again
-            </Button>
-            <Button
-              variant="secondary"
+            </button>
+            <button
               onClick={() => (window.location.href = '/')}
-              className="w-full"
+              className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
             >
               Go home
-            </Button>
+            </button>
           </div>
         </div>
       </div>

@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -86,81 +84,118 @@ export function RegisterForm() {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
+      <div className="bg-gray-950 border border-gray-800 shadow-2xl rounded-2xl p-8">
+        <div className="text-center mb-8">
+          <div className="h-12 w-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <span className="text-white font-bold text-2xl">F</span>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Join Flox</h2>
+          <p className="text-gray-400">Create your account to get started</p>
+        </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-700 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-xl">
+            <p className="text-red-400 text-sm">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            name="name"
-            type="text"
-            label="Full Name"
-            value={formData.name}
-            onChange={handleChange}
-            error={formErrors.name}
-            placeholder="Enter your full name"
-            autoComplete="name"
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+              Full Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter your full name"
+              autoComplete="name"
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            />
+            {formErrors.name && (
+              <p className="mt-1 text-sm text-red-400">{formErrors.name}</p>
+            )}
+          </div>
 
-          <Input
-            name="email"
-            type="email"
-            label="Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            error={formErrors.email}
-            placeholder="Enter your email"
-            autoComplete="email"
-            required
-          />
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              autoComplete="email"
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            />
+            {formErrors.email && (
+              <p className="mt-1 text-sm text-red-400">{formErrors.email}</p>
+            )}
+          </div>
 
-          <Input
-            name="password"
-            type="password"
-            label="Password"
-            value={formData.password}
-            onChange={handleChange}
-            error={formErrors.password}
-            placeholder="Create a password"
-            autoComplete="new-password"
-            helperText="Password must be at least 8 characters"
-            required
-          />
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Create a password"
+              autoComplete="new-password"
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            />
+            <p className="mt-1 text-sm text-gray-400">Password must be at least 8 characters</p>
+            {formErrors.password && (
+              <p className="mt-1 text-sm text-red-400">{formErrors.password}</p>
+            )}
+          </div>
 
-          <Input
-            name="confirmPassword"
-            type="password"
-            label="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            error={formErrors.confirmPassword}
-            placeholder="Confirm your password"
-            autoComplete="new-password"
-            required
-          />
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              autoComplete="new-password"
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            />
+            {formErrors.confirmPassword && (
+              <p className="mt-1 text-sm text-red-400">{formErrors.confirmPassword}</p>
+            )}
+          </div>
 
-          <Button
+          <button
             type="submit"
-            className="w-full"
-            isLoading={isLoading}
             disabled={isLoading}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg disabled:hover:scale-100 disabled:cursor-not-allowed mt-6"
           >
-            Create Account
-          </Button>
+            {isLoading ? 'Creating Account...' : 'Create Account'}
+          </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-400">
             Already have an account?{' '}
             <a
               href="/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-purple-400 hover:text-purple-300 transition-colors"
             >
               Sign in
             </a>

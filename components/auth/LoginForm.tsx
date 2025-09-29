@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 
 export function LoginForm() {
   const router = useRouter();
@@ -39,20 +37,15 @@ export function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted with:', formData);
 
     if (!validateForm()) {
-      console.log('Form validation failed');
       return;
     }
 
     try {
-      console.log('Attempting login...');
       await login(formData.email, formData.password);
-      console.log('Login successful, redirecting...');
       router.push('/dashboard');
     } catch (error) {
-      console.error('Login error:', error);
       // Error is handled by the AuthContext
     }
   };
@@ -75,56 +68,77 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+      <div className="bg-gray-950 border border-gray-800 shadow-2xl rounded-2xl p-8">
+        <div className="text-center mb-8">
+          <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <span className="text-white font-bold text-2xl">F</span>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+          <p className="text-gray-400">Sign in to your account</p>
+        </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-700 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-xl">
+            <p className="text-red-400 text-sm">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            name="email"
-            type="email"
-            label="Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            error={formErrors.email}
-            placeholder="Enter your email"
-            autoComplete="email"
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              autoComplete="email"
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+            {formErrors.email && (
+              <p className="mt-1 text-sm text-red-400">{formErrors.email}</p>
+            )}
+          </div>
 
-          <Input
-            name="password"
-            type="password"
-            label="Password"
-            value={formData.password}
-            onChange={handleChange}
-            error={formErrors.password}
-            placeholder="Enter your password"
-            autoComplete="current-password"
-            required
-          />
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+            {formErrors.password && (
+              <p className="mt-1 text-sm text-red-400">{formErrors.password}</p>
+            )}
+          </div>
 
-          <Button
+          <button
             type="submit"
-            className="w-full"
-            isLoading={isLoading}
             disabled={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg disabled:hover:scale-100 disabled:cursor-not-allowed"
           >
-            Sign In
-          </Button>
+            {isLoading ? 'Signing In...' : 'Sign In'}
+          </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-400">
+            Don&apos;t have an account?{' '}
             <a
               href="/register"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
             >
               Sign up
             </a>
